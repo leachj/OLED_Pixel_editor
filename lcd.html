@@ -1,0 +1,101 @@
+<html>
+<head>
+<script src="jquery-3.1.1.js"></script>
+<script>
+	$(document).ready(function() {
+    	$("#create").click(function(){
+        	var width = parseInt($("#width").val());
+        	var height = parseInt($("#height").val());
+        	var container = $("#container");
+        	container.append("<table>");
+			for(var i=0; i<height; i++){
+				container.append("<tr>");
+				for(var j=0; j<width; j++){
+					var id = i+"-"+j;
+					container.append("<td id="+id+" class=\"pixel\"></td>");
+				}
+				container.append("</tr>");
+			}
+			container.append("</table>");
+			
+			$(".pixel").click(function(){
+    			//$( this ).attr('id');
+    			if($(this).hasClass("filled")){
+    				$(this).removeClass("filled");
+    			} else {
+    				$(this).addClass("filled");
+    			}
+    		}); 
+    	});
+    	
+    	$("#save").click(function(){
+    		var width = parseInt($("#width").val());
+        	var height = parseInt($("#height").val());
+        	var output = "static unsigned char logo[] = {\n" 
+        	var index = 0;
+        	for(var i=0; i<height; i++){
+				for(var j=0; j<width; j++){
+					if(index == 0){
+						output += "0b";
+					} else if((index % 8) == 0){
+						output += ", 0b";
+					}
+					var id = i+"-"+j;
+					if($("#"+id).hasClass("filled")){
+						output += "1"
+					} else {
+						output += "0"
+					}
+					index++;
+				}
+			}
+			output += "\n};"
+			$("#output").text(output);
+    	});
+    	
+    	
+    	
+	});
+</script>
+<style>
+
+table {
+    border-collapse: collapse;
+    table-layout: fixed;
+    margin: auto;
+}
+
+table, th, td {
+    border: 1px solid grey;
+    padding: 0px;
+}
+
+td {
+    height: 10px;
+    width: 9px;
+}
+
+.filled {
+	background-color: black;
+}
+
+.empty {
+	background-color: white;
+}
+
+</style>
+</head>
+<body>
+<form>
+Width: <input type="text" id="width" value="10">
+Height: <input type="text" id="height" value="10">
+<input type="button" id="create" value="Create">
+<input type="button" id="save" value="Save">
+
+</form>
+<div id="container"></div>
+<div id="output"></div>
+
+</div>
+
+</body>
